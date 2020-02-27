@@ -1,86 +1,25 @@
 package graph;
 
-import java.util.*;
+import java.util.List;
 
-public class Graph <T> {
+public interface Graph<T> {
+     void addVertex(T vertex);
 
-    private Map<T, Set<Edge>> edgesFromVertex = new HashMap<>();
+     void addEdge(T vertexFrom, T vertexTo);
 
-    public void addVertex(T vertex) {
-        checkVertexNotNull(vertex);
-        if (!edgesFromVertex.containsKey(vertex)) {
-            edgesFromVertex.put(vertex, new HashSet<>());
-        }
-    }
+     List<Graph.Edge> getPath(T vertexFrom, T vertexTo);
 
-    public void addEdge(T vertexFrom, T vertexTo) {
-        addVertex(vertexFrom);
-        addVertex(vertexTo);
-        edgesFromVertex.get(vertexFrom).add(new Edge(vertexFrom, vertexTo));
-    }
-
-    public List<Edge> getPath(T vertexFrom, T vertexTo) {
-        checkVertex(vertexFrom);
-        checkVertex(vertexTo);
-
-        List<Edge> result = new LinkedList<>();
-        List<Edge> visited = new ArrayList<>();
-
-        canReach(vertexFrom, vertexTo, result, visited);
-        return result;
-    }
-
-    private void checkVertexNotNull(T vertex) {
-        if (vertex == null) {
-            throw new IllegalArgumentException("Vertex cannot be null");
-        }
-    }
-
-    private boolean canReach(T vertexFrom, T vertexTo, List<Edge> path, List<Edge> visited) {
-        for (Edge edge : edgesFromVertex.get(vertexFrom)) {
-            if (visited.contains(edge)) {
-                return false;
-            }
-            visited.add(edge);
-            final T nextVertex = edge.vertexTo;
-            if (nextVertex.equals(vertexTo) || canReach(nextVertex, vertexTo, path, visited)) {
-                path.add(edge);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void checkVertex(T vertex) {
-        checkVertexNotNull(vertex);
-        if (!edgesFromVertex.containsKey(vertex)) {
-            throw new IllegalArgumentException("The graph doesn't contain vertex: " + vertex.toString());
-        }
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder(
-                edgesFromVertex.isEmpty() ? "Empty graph" : "Graph of: "
-        );
-        Set<T> vertices = new HashSet<>(edgesFromVertex.keySet());
-        Set<Edge> edges = new HashSet<>();
-        for (Set<Edge> edgesFromVertex : edgesFromVertex.values()) {
-            edges.addAll(edgesFromVertex);
-            for (Edge edge : edges) {
-                vertices.remove(edge.vertexTo);
-                vertices.remove(edge.vertexFrom);
-            }
-        }
-        builder.append(edges);
-        builder.append(vertices);
-        return builder.toString();
-    }
-
-
-    public class Edge {
+     class Edge<T> {
         private final T vertexFrom;
         private final T vertexTo;
+
+        T getVertexFrom() {
+            return vertexFrom;
+        }
+
+        T getVertexTo() {
+            return vertexTo;
+        }
 
         Edge(T vertexFrom, T vertexTo) {
             checkVertexNotNull(vertexFrom);
@@ -88,6 +27,13 @@ public class Graph <T> {
             this.vertexFrom = vertexFrom;
             this.vertexTo = vertexTo;
         }
+
+        private void checkVertexNotNull(T vertex) {
+            if (vertex == null) {
+                throw new IllegalArgumentException("Vertex cannot be null");
+            }
+        }
+
 
         @Override
         public String toString() {
@@ -101,8 +47,8 @@ public class Graph <T> {
 
         @Override
         public boolean equals(Object object) {
-            if (object instanceof Graph.Edge && object.hashCode() == hashCode()) {
-                Edge other = (Edge) object;
+            if (object instanceof DirectedGraph.Edge && object.hashCode() == hashCode()) {
+                Graph.Edge other = (Graph.Edge) object;
                 return this.vertexFrom.equals(other.vertexFrom) && this.vertexTo.equals(other.vertexTo);
             }
             return false;
