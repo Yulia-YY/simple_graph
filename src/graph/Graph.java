@@ -23,7 +23,7 @@ public class Graph <T> {
         checkVertex(vertexFrom);
         checkVertex(vertexTo);
 
-        List<Edge> result = new ArrayList<>();
+        List<Edge> result = new LinkedList<>();
         List<Edge> visited = new ArrayList<>();
 
         canReach(vertexFrom, vertexTo, result, visited);
@@ -58,6 +58,26 @@ public class Graph <T> {
         }
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder(
+                edgesFromVertex.isEmpty() ? "Empty graph" : "Graph of: "
+        );
+        Set<T> vertices = new HashSet<>(edgesFromVertex.keySet());
+        Set<Edge> edges = new HashSet<>();
+        for (Set<Edge> edgesFromVertex : edgesFromVertex.values()) {
+            edges.addAll(edgesFromVertex);
+            for (Edge edge : edges) {
+                vertices.remove(edge.vertexTo);
+                vertices.remove(edge.vertexFrom);
+            }
+        }
+        builder.append(edges);
+        builder.append(vertices);
+        return builder.toString();
+    }
+
+
     public class Edge {
         private final T vertexFrom;
         private final T vertexTo;
@@ -72,6 +92,20 @@ public class Graph <T> {
         @Override
         public String toString() {
             return vertexFrom.toString() + " - " + vertexTo.toString();
+        }
+
+        @Override
+        public int hashCode() {
+            return vertexFrom.hashCode() * 32 + vertexTo.hashCode() * 84;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object instanceof Graph.Edge && object.hashCode() == hashCode()) {
+                Edge other = (Edge) object;
+                return this.vertexFrom.equals(other.vertexFrom) && this.vertexTo.equals(other.vertexTo);
+            }
+            return false;
         }
     }
 }
