@@ -19,9 +19,7 @@ public class test {
     private void testGetPath(Graph graph) {
         String from = "A";
         String to = "G";
-        List<Graph.Edge> pathExpected = new LinkedList<>();
-        pathExpected.add(new Graph.Edge("A", "B"));
-        pathExpected.add(new Graph.Edge("B", "G"));
+        List<Graph.Edge> pathExpected = composeResult("A", "D", "D", "G");
         Assert.assertEquals("From " + from + " to " + to, pathExpected, graph.getPath(from, to));
     }
 
@@ -31,13 +29,18 @@ public class test {
         }
     }
 
+    private List<Graph.Edge> composeResult(String... vertex) {
+        List<Graph.Edge> pathExpected = new LinkedList<>();
+        for (int i = 0; i < vertex.length - 1; i++) {
+            pathExpected.add(new Graph.Edge(vertex[i], vertex[i + 1]));
+        }
+        return pathExpected;
+    }
+
     private Graph<String> addEdgesToGraph(Graph<String> graph) {
         addEdges(graph, "A", "C", "E");
-        addEdges(graph, "A", "B", "D");
-        addEdges(graph, "A", "D");
-        addEdges(graph, "D", "F");
-        addEdges(graph, "D", "G");
-        addEdges(graph, "D", "D");
+        addEdges(graph, "A", "B", "D", "D", "F");
+        addEdges(graph, "A", "D", "G");
         graph.addVertex("K");
         return graph;
     }
