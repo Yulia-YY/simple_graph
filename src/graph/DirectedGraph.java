@@ -2,6 +2,11 @@ package graph;
 
 import java.util.*;
 
+/**
+ * An object that represents an undirected graph.
+ *
+ * @param <T> type of vertices of a graph
+ */
 public class DirectedGraph<T> implements Graph<T> {
 
     Map<T, Set<Edge>> edgesFromVertex = new HashMap<>();
@@ -46,6 +51,7 @@ public class DirectedGraph<T> implements Graph<T> {
                 continue;
             }
             visited.add(edge);
+            // depends on graph implementation
             final T nextVertex = (T) getNextVertex(currentVertex, edge);
             if (nextVertex.equals(aimVertex) || canReach(nextVertex, aimVertex, path, visited)) {
                 path.add(0, edge);

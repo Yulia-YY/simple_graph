@@ -1,5 +1,10 @@
 package graph;
 
+/**
+ * An object that represents an undirected graph.
+ *
+ * @param <T> type of vertices of a graph
+ */
 public class UndirectedGraph<T> extends DirectedGraph<T> implements Graph<T> {
 
     protected String graphType() {
