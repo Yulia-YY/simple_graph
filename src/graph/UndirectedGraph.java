@@ -2,6 +2,14 @@ package graph;
 
 public class UndirectedGraph<T> extends DirectedGraph<T> implements Graph<T> {
 
+    protected String graphType() {
+        return "Undirected graph";
+    }
+
+    protected T getNextVertex(T currentVertex, Edge<T> edge) {
+        return currentVertex.equals(edge.getVertexFrom()) ? edge.getVertexTo() : edge.getVertexFrom();
+    }
+
     @Override
     public void addEdge(T vertexFrom, T vertexTo) {
         addVertex(vertexFrom);

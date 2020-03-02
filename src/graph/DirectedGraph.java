@@ -38,19 +38,23 @@ public class DirectedGraph<T> implements Graph<T> {
         }
     }
 
-    private boolean canReach(T vertexFrom, T vertexTo, List<Edge> path, List<Edge> visited) {
-        for (Edge edge : edgesFromVertex.get(vertexFrom)) {
+    private boolean canReach(T currentVertex, T aimVertex, List<Edge> path, List<Edge> visited) {
+        for (Edge edge : edgesFromVertex.get(currentVertex)) {
             if (visited.contains(edge)) {
-                return false;
+                continue;
             }
             visited.add(edge);
-            final T nextVertex = (T) edge.getVertexTo();
-            if (nextVertex.equals(vertexTo) || canReach(nextVertex, vertexTo, path, visited)) {
-                path.add(edge);
+            final T nextVertex = (T) getNextVertex(currentVertex, edge);
+            if (nextVertex.equals(aimVertex) || canReach(nextVertex, aimVertex, path, visited)) {
+                path.add(0, edge);
                 return true;
             }
         }
         return false;
+    }
+
+    protected T getNextVertex(T currentVertex, Edge<T> edge) {
+        return edge.getVertexTo();
     }
 
     private void checkVertex(T vertex) {
@@ -60,16 +64,20 @@ public class DirectedGraph<T> implements Graph<T> {
         }
     }
 
+    protected String graphType() {
+        return "Directed graph";
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder(
-                edgesFromVertex.isEmpty() ? "Empty graph" : "DirectedGraph of: "
+                edgesFromVertex.isEmpty() ? "Empty " + graphType() : graphType() + " of: "
         );
         Set<T> vertices = new HashSet<>(edgesFromVertex.keySet());
         Set<Edge> edges = new HashSet<>();
         for (Set<Edge> edgesFromVertex : edgesFromVertex.values()) {
             edges.addAll(edgesFromVertex);
-            for (Edge edge : edges) {
+            for (Edge edge : edgesFromVertex) {
                 vertices.remove(edge.getVertexTo());
                 vertices.remove(edge.getVertexFrom());
             }

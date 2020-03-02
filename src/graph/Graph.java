@@ -3,25 +3,25 @@ package graph;
 import java.util.List;
 
 public interface Graph<T> {
-     void addVertex(T vertex);
+    void addVertex(T vertex);
 
-     void addEdge(T vertexFrom, T vertexTo);
+    void addEdge(T vertexFrom, T vertexTo);
 
-     List<Graph.Edge> getPath(T vertexFrom, T vertexTo);
+    List<Graph.Edge> getPath(T vertexFrom, T vertexTo);
 
-     class Edge<T> {
+    class Edge<T> {
         private final T vertexFrom;
         private final T vertexTo;
 
-        T getVertexFrom() {
+        public T getVertexFrom() {
             return vertexFrom;
         }
 
-        T getVertexTo() {
+        public T getVertexTo() {
             return vertexTo;
         }
 
-        Edge(T vertexFrom, T vertexTo) {
+        public Edge(T vertexFrom, T vertexTo) {
             checkVertexNotNull(vertexFrom);
             checkVertexNotNull(vertexTo);
             this.vertexFrom = vertexFrom;
