@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.List;
 
 import graph.*;
@@ -7,52 +8,36 @@ public class test {
 
     @Test
     public void testGetPathUndirectedGraph() {
-        Graph<String> graph = createUndirectedGraph();
-        String from = "A";
-        String to = "G";
-        List<Graph.Edge> path = graph.getPath(from, to);
-        List<Graph.Edge> pathExpected = getSimpleGraph("A", "B", "G").getPath("A", "G");
-
-        Assert.assertEquals("From " + from + " to " + to, pathExpected, path);
+        testGetPath(addEdgesToGraph(new UndirectedGraph<>()));
     }
 
     @Test
     public void testGetPathDirectedGraph() {
-        Graph<String> graph = createDirectedGraph();
+        testGetPath(addEdgesToGraph(new DirectedGraph<>()));
+    }
+
+    private void testGetPath(Graph graph) {
         String from = "A";
         String to = "G";
-        List<Graph.Edge> path = graph.getPath(from, to);
-        List<Graph.Edge> pathExpected = getSimpleGraph("A", "D", "G").getPath(from, to);
-
-        Assert.assertEquals("From " + from + " to " + to, pathExpected, path);
+        List<Graph.Edge> pathExpected = new LinkedList<>();
+        pathExpected.add(new Graph.Edge("A", "B"));
+        pathExpected.add(new Graph.Edge("B", "G"));
+        Assert.assertEquals("From " + from + " to " + to, pathExpected, graph.getPath(from, to));
     }
 
-
-    private Graph<String> getSimpleGraph(String... vertex) {
-        DirectedGraph<String> graphRes = new DirectedGraph<>();
+    private void addEdges(Graph<String> graph, String... vertex) {
         for (int i = 0; i < vertex.length - 1; i++) {
-            graphRes.addEdge(vertex[i], vertex[i + 1]);
+            graph.addEdge(vertex[i], vertex[i + 1]);
         }
-        return graphRes;
-    }
-
-    private Graph<String> createDirectedGraph() {
-        return addEdgesToGraph(new DirectedGraph<>());
-    }
-
-    private Graph<String> createUndirectedGraph() {
-        return addEdgesToGraph(new UndirectedGraph<>());
     }
 
     private Graph<String> addEdgesToGraph(Graph<String> graph) {
-        graph.addEdge("A", "B");
-        graph.addEdge("A", "D");
-        graph.addEdge("B", "D");
-        graph.addEdge("A", "C");
-        graph.addEdge("C", "E");
-        graph.addEdge("D", "F");
-        graph.addEdge("D", "G");
-        graph.addEdge("D", "D");
+        addEdges(graph, "A", "C", "E");
+        addEdges(graph, "A", "B", "D");
+        addEdges(graph, "A", "D");
+        addEdges(graph, "D", "F");
+        addEdges(graph, "D", "G");
+        addEdges(graph, "D", "D");
         graph.addVertex("K");
         return graph;
     }
