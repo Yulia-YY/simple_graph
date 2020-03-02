@@ -7,18 +7,20 @@ public class DirectedGraph<T> implements Graph<T> {
     Map<T, Set<Edge>> edgesFromVertex = new HashMap<>();
 
     @Override
-    public void addVertex(T vertex) {
+    public boolean addVertex(T vertex) {
         checkVertexNotNull(vertex);
         if (!edgesFromVertex.containsKey(vertex)) {
             edgesFromVertex.put(vertex, new HashSet<>());
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void addEdge(T vertexFrom, T vertexTo) {
+    public boolean addEdge(T vertexFrom, T vertexTo) {
         addVertex(vertexFrom);
         addVertex(vertexTo);
-        edgesFromVertex.get(vertexFrom).add(new Edge<>(vertexFrom, vertexTo));
+        return edgesFromVertex.get(vertexFrom).add(new Edge<>(vertexFrom, vertexTo));
     }
 
     public List<Edge> getPath(T vertexFrom, T vertexTo) {

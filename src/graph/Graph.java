@@ -3,9 +3,9 @@ package graph;
 import java.util.List;
 
 public interface Graph<T> {
-    void addVertex(T vertex);
+    boolean addVertex(T vertex);
 
-    void addEdge(T vertexFrom, T vertexTo);
+    boolean addEdge(T vertexFrom, T vertexTo);
 
     List<Graph.Edge> getPath(T vertexFrom, T vertexTo);
 
